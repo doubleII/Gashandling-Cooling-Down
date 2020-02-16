@@ -1,7 +1,6 @@
 from datetime import datetime
 from time import process_time
 
-from .fsm import Reader, Writer
 from .state import State
 from fsm.data.models import Device
 
@@ -36,22 +35,22 @@ class CoolingDown(State):
 
         while self.state_timer > process_time():
             start_timer = process_time()
-            test_data = Reader.read_config(self.pseudo_parameters_csv)
+            test_data = self.fsm.reader.read_config(self.pseudo_parameters_csv)
             test_current_pressure_pVac = test_data['test_current_pressure_pVac']
             test_current_temperature_in_isolationskammer = test_data['test_current_temperature_in_isolationskammer']
             test_current_pressure_pPreVac = test_data['test_current_pressure_pPreVac']
             while start_timer + self.time_interval > process_time():
                 pass
             time = datetime.now().strftime('%Y%d%m %H:%M:%S')
-            Writer.write_cooling_down_csv_file(self.cooldown_csv,
-                                               time,
-                                               test_current_pressure_pPreVac,
-                                               self.fsm.pPreVac_max,
-                                               test_current_pressure_pVac,
-                                               self.fsm.pVac_max,
-                                               test_current_temperature_in_isolationskammer,
-                                               self.fsm.set_point_temp_stage_1,
-                                               self.fsm.set_point_pressure_stage_1)
+            self.fsm.writer.write_cooling_down_csv_file(self.cooldown_csv,
+                                                        time,
+                                                        test_current_pressure_pPreVac,
+                                                        self.fsm.pPreVac_max,
+                                                        test_current_pressure_pVac,
+                                                        self.fsm.pVac_max,
+                                                        test_current_temperature_in_isolationskammer,
+                                                        self.fsm.set_point_temp_stage_1,
+                                                        self.fsm.set_point_pressure_stage_1)
 
         self.fsm.to_transition("to_measure_cooldown")
 

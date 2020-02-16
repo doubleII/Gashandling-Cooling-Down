@@ -1,4 +1,3 @@
-from .fsm import Reader
 from .state import State
 
 
@@ -18,13 +17,13 @@ class MeasurementOfPrecooling(State):
         if self.fsm.preview_state == self.fsm.states["Initialize"]:
             result = 'to_precool'
         elif self.fsm.preview_state == self.fsm.states["Precooling"]:
-            values = Reader.get_current_pressure_and_temperature(self.precoolingdown_csv)
+            values = self.fsm.reader.get_current_pressure_and_temperature(self.precoolingdown_csv)
             # if pressure > 220 mbar and temperature < 4 K go to state FillWithHelium
             if float(values[1]) > self.fsm.min_pressure_in_tank:
                 if float(values[2]) < self.fsm.setpoint_temperature_in_tank:
                     result = 'to_fill_helium'
                 else:
-                    result = Reader.read_precooling_csv(self.precoolingdown_csv,
+                    result = self.fsm.reader.read_precooling_csv(self.precoolingdown_csv,
                                                         self.fsm.min_pressure_in_tank,
                                                         self.fsm.setpoint_temperature_in_tank)
             else:
@@ -52,7 +51,7 @@ class FillLevelMeasurement(State):
     def execute(self):
         self.log.info('Measure helium level execute')
         result = 'to_fill_helium'
-        pressure = Reader.get_pressure_difference(self.fillwithhelium_csv)
+        pressure = self.fsm.reader.get_pressure_difference(self.fillwithhelium_csv)
         if float(pressure[1]) > float(self.fsm.pressure_difference):
             if float(pressure[2]) > float(self.fsm.pressure_between_booster_pump_and_compressor_min):
                 result = 'to_error'
@@ -82,7 +81,7 @@ class CooldownMeasurement(State):
     def execute(self):
         self.log.info('Measure cool down execute')
         result = 'to_cooldown'
-        values = Reader.get_cooldown_values(self.cooldown_csv)
+        values = self.fsm.reader.get_cooldown_values(self.cooldown_csv)
         # if current pPreVac > pPreVac_max
         if float(values[1]) > float(values[2]):
             result = 'to_error'
