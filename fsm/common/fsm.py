@@ -24,9 +24,14 @@ class FSM(object):
         self.reader = Reader()
         # writer
         self.writer = Writer()
+
         # todo fsm parameter
         # temperature parameters
-        self.data = self.reader.read_config('Gashandling/fsm/configuration/config.yml')
+        # self.data = self.reader.read_config('Gashandling/fsm/configuration/config.yml')
+        self.tango_path = 'tango://cci3he10.se.frm2.tum.de:10000/box/plc/_'
+        # todo only for test
+        self.data = self.reader.read_config('fsm/configuration/config.yml')
+
         self.setpoint_temperature_in_tank = self.data['Precooling']['Einsatztemperatur']
         self.temp_max = None
         self.setpoint_temp = None
@@ -49,6 +54,8 @@ class FSM(object):
         self.valves = {}
         self.booster_pump = False
         self.compressor = False
+        # tables
+        self.precooling_table = []
 
     def add_transition(self, trans_name, transition):
         self.transitions[trans_name] = transition

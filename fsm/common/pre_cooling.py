@@ -3,14 +3,14 @@ from time import process_time
 
 from .state import State
 
+import PyTango
+# dev = PyTango.DeviceProxy('tango://cci3he10.se.frm2.tum.de:10000/box/plc/' + ventilname)
+
 
 class Precooling(State):
     """ wird eine bestimmte Zeit vorgekühlt"""
     def __init__(self, fsm):
         super(Precooling, self).__init__(fsm)
-        # self.pseudo_parameter_yml = self.fsm.data['FilePaths']['pseudoparameters_yml']
-        # self.precooldown_csv = self.fsm.data['FilePaths']['precooling_csv']
-        self.precooling_table = []
 
     def enter(self):
         self.log.info('===> Precooling enter')
@@ -20,26 +20,21 @@ class Precooling(State):
     def execute(self):
         self.log.info('Precooling execute method')
         self.state_timer = self.state_timer + process_time()
+        self.fsm.precooling_table.clear()
 
         while self.state_timer > process_time():
             start_time = process_time()
-            # todo read test values from Tango
-            # test_data = self.fsm.reader.read_config(self.pseudo_parameter_yml)
-            # self.log.info('test data: {0}'.format(test_data))
-            # self.log.info('>>> Get feedback for P and T')
             # interval zwischen die einzelne Messungen
             while start_time + self.time_interval > process_time():
                 pass
-            time = datetime.now().strftime('%Y%d%m %H:%M:%S')
-            # todo read current temperature
-            # current_temperature = test_data['current_temperature']
-            # current_pressure = test_data['current_pressure']
-
-
-            self.fsm.current_temp =  # test_current_temperature  # todo read current temperature from sensor
-            self.fsm.current_pressure =  # test_current_pressure  # todo read current pressure form sensor
-            self.fsm.writer.write_csv(self.precooldown_csv, time, self.fsm.current_pressure, self.fsm.current_temp,
-                             self.fsm.setpoint_temperature_in_tank, self.fsm.reader.read_initial_temp(self.precooldown_csv))
+            # todo read values from Tango
+            column = []
+            self.fsm.current_temp = 2 # todo read current temperature from sensor
+            self.fsm.current_pressure = 3 # todo read current pressure form sensor
+            column.append(self.fsm.current_temp)
+            column.append(self.fsm.current_pressure)
+            # create pre cooling table |current temperature|current pressure| two columns
+            self.fsm.precooling_table.append(column)
             self.log.info('test_current_temperature {0} K, test_current_pressure: {1} mbar'
                           .format(self.fsm.current_temp, self.fsm.current_pressure))
             self.log.info('Precooling timer: {0}'.format(process_time()))

@@ -25,10 +25,12 @@ if __name__ == "__main__":
     """ the main function """
 # create a class CONTROLLER and there put the start logic
 # cool down process
-    cool = Cooler()
-    cool.fsm.writer.reset_csv_file()
+    cool = Cooler('Initialize')
+    # cool.fsm.writer.reset_csv_file()
 # ==================================================
-    data = cool.fsm.reader.read_config('Gashandling/fsm/configuration/config.yml')
+    # for test
+    data = cool.fsm.reader.read_config('fsm/configuration/config.yml')
+    # data = cool.fsm.reader.read_config('Gashandling/fsm/configuration/config.yml')
     # Global time interval for FMS
     time_interval = data['Main']['global_time_interval']
     # Running time of FSM in seconds

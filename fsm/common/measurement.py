@@ -5,7 +5,6 @@ class MeasurementOfPrecooling(State):
     """ measure pressure und temperature """
     def __init__(self, fsm):
         super(MeasurementOfPrecooling, self).__init__(fsm)
-        self.precoolingdown_csv = self.fsm.data['FilePaths']['precooling_csv']
 
     def enter(self):
         self.log.info('===> Measure Precooling State enter')
@@ -17,13 +16,19 @@ class MeasurementOfPrecooling(State):
         if self.fsm.preview_state == self.fsm.states["Initialize"]:
             result = 'to_precool'
         elif self.fsm.preview_state == self.fsm.states["Precooling"]:
-            values = self.fsm.reader.get_current_pressure_and_temperature(self.precoolingdown_csv)
-            # if pressure > 220 mbar and temperature < 4 K go to state FillWithHelium
-            if float(values[1]) > self.fsm.min_pressure_in_tank:
-                if float(values[2]) < self.fsm.setpoint_temperature_in_tank:
-                    result = 'to_fill_helium'
-                else:
-                    result = self.fsm.reader.read_precooling_csv(self.precoolingdown_csv,
+            cols = len(self.fsm.precooling_table)
+            rows = 0
+            if cols:
+                rows = len(self.fsm.precooling_table[0])
+                for j in range(rows):
+                    for i in range(cols):
+                     values = self.fsm.precooling_table[i][j]
+                    # if pressure > 220 mbar and temperature < 4 K go to state FillWithHelium
+                    if float(values[1]) > self.fsm.min_pressure_in_tank:
+                         if float(values[2]) < self.fsm.setpoint_temperature_in_tank:
+                            result = 'to_fill_helium'
+                         else:
+                             result = self.fsm.reader.read_precooling_csv(self.precoolingdown_csv,
                                                         self.fsm.min_pressure_in_tank,
                                                         self.fsm.setpoint_temperature_in_tank)
             else:

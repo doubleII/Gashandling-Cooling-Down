@@ -16,7 +16,7 @@ Char = type("Char", (object, ), {})
 
 class Cooler(Char):
     """ define all states and transitions """
-    def __init__(self):
+    def __init__(self, state):
         self.log = MyLogger().get_logger()
         self.fsm = FSM(self)
         # States
@@ -44,7 +44,9 @@ class Cooler(Char):
                                 Transition("CooldownMeasurement"))
         self.fsm.add_transition("to_error", Transition("Error"))
         # start state
-        self.fsm.set_state("Initialize")
+        # self.fsm.set_state(state)
+        # todo test start state
+        self.fsm.set_state(state)
 
     def execute(self):
         try:
