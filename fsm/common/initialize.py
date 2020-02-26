@@ -16,7 +16,7 @@ class Initialize(State):
     def execute(self):
         # todo set all device to false or check if the are working
         self.log.info('Initialize execute')
-        for i in range(1, 16):
+        for i in list[range(1, 7)] + list[range(8, 16)]:
             self.valves[i] = Device('V%d' % i, "false")
             self.valves[i].read()
         self.fsm.to_transition("to_measure_precooling")
