@@ -9,12 +9,7 @@ from .measurement import MeasurementOfPrecooling, \
 from .pre_cooling import Precooling
 from .transition import Transition
 
-
-Char = type("Char", (object, ), {})
-""" base class """
-
-
-class Cooler(Char):
+class Cooler(object):
     """ define all states and transitions """
     def __init__(self):
         self.log = MyLogger().get_logger()
@@ -50,4 +45,4 @@ class Cooler(Char):
         try:
             self.fsm.execute()
         except Exception as ex:
-            self.log.error(ex)
+            self.log.error('execute: %s', ex)
