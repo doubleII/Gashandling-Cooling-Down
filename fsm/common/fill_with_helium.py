@@ -32,9 +32,9 @@ class FillWithHelium(State):
         if not self.open_valves:
             self.open_valves = True
             for i in valves:
-                self.fsm.valves[i] = Device('V%d', True)
+                self.fsm.valves[i] = Device('V%d' % i, True)
                 self.log.info('Device V{0}, status: {1}'.format(i, self.fsm.valves[i].read()))
-        self.fsm.booster_pump = Device('booster_pump', True)
+        self.fsm.booster_pump = Device('prepump', True)
         self.fsm.compressor = Device('compressor', True)
         self.log.info('booster pump status: {0}, compressor status: {1}'
                       .format(self.fsm.booster_pump.read(), self.fsm.compressor.read()))
