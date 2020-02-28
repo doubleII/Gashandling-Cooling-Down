@@ -22,19 +22,23 @@ class MeasurementOfPrecooling(State):
                 rows = len(self.fsm.precooling_table[0])
                 for j in range(rows):
                     for i in range(cols):
-                     values = self.fsm.precooling_table[i][j]
+                        if i == 0:
+                            temp = self.fsm.precooling_table[i][j]
+                        elif i == 1:
+                            pressure = self.fsm.precooling_table[i][j]
+                    self.log.info('current temperature: {0}, current pressure: {1}'.format(temp, pressure))
                     # if pressure > 220 mbar and temperature < 4 K go to state FillWithHelium
-                    if float(values[1]) > self.fsm.min_pressure_in_tank:
-                         if float(values[2]) < self.fsm.setpoint_temperature_in_tank:
+                    if float(pressure) > self.fsm.min_pressure_in_tank:
+                        if float(temp) < self.fsm.setpoint_temperature_in_tank:
                             result = 'to_fill_helium'
-                         else:
-                             result = self.fsm.reader.read_precooling_csv(self.precoolingdown_csv,
+                        else:
+                            result = self.fsm.reader.read_precooling_csv(self.precoolingdown_csv,
                                                         self.fsm.min_pressure_in_tank,
                                                         self.fsm.setpoint_temperature_in_tank)
             else:
                 result = "to_error"
-                self.log.error('Current pressure in tank: {0} mbar. The pressure in tank should be higher as {1} mbar'
-                               .format(values[1], self.fsm.min_pressure_in_tank))
+                # self.log.error('Current pressure in tank: {0} mbar. The pressure in tank should be higher as {1} mbar'
+                #             .format(values[1], self.fsm.min_pressure_in_tank))
 
         self.fsm.to_transition(result)
 

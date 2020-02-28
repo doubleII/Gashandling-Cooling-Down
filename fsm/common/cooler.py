@@ -10,11 +10,11 @@ from .pre_cooling import Precooling
 from .transition import Transition
 
 
-Char = type("Char", (object, ), {})
+# Char = type("Char", (object, ), {})
 """ base class """
 
 
-class Cooler(Char):
+class Cooler(object):
     """ define all states and transitions """
     def __init__(self, state):
         self.log = MyLogger().get_logger()

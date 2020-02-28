@@ -13,7 +13,6 @@ class FSM(object):
     """ FSM parameter """
 
     def __init__(self, character):
-        # self.char = character
         self.states = {}
         self.transitions = {}
         self.cur_state = None
@@ -28,7 +27,6 @@ class FSM(object):
         # todo fsm parameter
         # temperature parameters
         # self.data = self.reader.read_config('Gashandling/fsm/configuration/config.yml')
-        self.tango_path = 'tango://cci3he10.se.frm2.tum.de:10000/box/plc/_'
         # todo only for test
         self.data = self.reader.read_config('fsm/configuration/config.yml')
 

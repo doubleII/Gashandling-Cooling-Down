@@ -29,8 +29,8 @@ class Precooling(State):
                 pass
             # todo read values from Tango
             column = []
-            self.fsm.current_temp = 2 # todo read current temperature from sensor
-            self.fsm.current_pressure = 3 # todo read current pressure form sensor
+            self.fsm.current_temp = 4 # todo read current temperature from sensor
+            self.fsm.current_pressure = 7 # todo read current pressure form sensor
             column.append(self.fsm.current_temp)
             column.append(self.fsm.current_pressure)
             # create pre cooling table |current temperature|current pressure| two columns
