@@ -3,9 +3,6 @@ from time import process_time
 from .state import State
 
 
-# dev = PyTango.DeviceProxy('tango://cci3he10.se.frm2.tum.de:10000/box/plc/' + ventilname)
-
-
 class Precooling(State):
     """ vorkühlen """
     def __init__(self, fsm):

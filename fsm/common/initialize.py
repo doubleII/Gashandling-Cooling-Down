@@ -1,5 +1,5 @@
-from .state import State
 from fsm.data.models import Device
+from .state import State
 
 
 class Initialize(State):
@@ -22,6 +22,15 @@ class Initialize(State):
 
         self.fsm.booster_pump = Device(self.fsm.data['Initialize']['forpump'])
         self.fsm.compressor = Device(self.fsm.data['Initialize']['compressor'])
+        self.fsm.p_in_let = Device(self.fsm.data['Initialize']['pInlet'])
+        self.fsm.p_still = Device(self.fsm.data['Initialize']['pStill'])
+        self.fsm.p_kond = Device(self.fsm.data['Initialize']['pKond'])
+        self.fsm.p_out_let = Device(self.fsm.data['Initialize']['pUotlet'])
+        self.fsm.p_vacc = Device(self.fsm.data['Initialize']['pVacc'])
+        self.fsm.p_v_15 = Device(self.fsm.data['Initialize']['pV15'])
+        self.fsm.temp_sensor_a = Device(self.fsm.data['Initialize']['temp_sensor_a'])
+        self.fsm.temp_sensor_b = Device(self.fsm.data['Initialize']['temp_sensor_b'])
+
 
         self.fsm.to_transition("to_measure_precooling")
 

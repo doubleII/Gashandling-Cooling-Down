@@ -24,9 +24,10 @@ class FSM(object):
         # writer
         self.writer = Writer()
 
-        # self.data = self.reader.read_config('Gashandling/fsm/configuration/config.yml')
-        # todo only for test
-        self.data = self.reader.read_config('fsm/configuration/config.yml')
+        self.data = self.reader.read_config('Gashandling/fsm/configuration/config.yml')
+        # only for test
+        # self.data = self.reader.read_config('fsm/configuration/config.yml')
+
         self.k_factor = self.data['Main']['k']
         # temperature parameters
         self.setpoint_temperature_in_tank = self.data['Precooling']['Einsatztemperatur']
@@ -51,8 +52,17 @@ class FSM(object):
         self.set_point_pressure_stage_1 = self.data['CoolingDown']['set_point_pressure_stage_1']
         # devices
         self.valves = {}
-        self.booster_pump = False
-        self.compressor = False
+        self.booster_pump = None
+        self.compressor = None
+        self.p_still = None
+        self.p_in_let = None
+        self.p_out_let = None
+        self.p_kond = None
+        self.p_tank = None
+        self.p_vacc = None
+        self.p_v_15 = None
+        self.temp_sensor_a = None
+        self.temp_sensor_b = None
         # tables
         self.precooling_table = []
 

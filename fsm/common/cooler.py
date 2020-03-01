@@ -1,17 +1,13 @@
 from .cooling_down import CoolingDown
 from .error import Error
-from .fsm import FSM
 from .fill_with_helium import FillWithHelium
+from .fsm import FSM
 from .initialize import Initialize
 from .logging import MyLogger
 from .measurement import MeasurementOfPrecooling, \
     FillLevelMeasurement, CooldownMeasurement
 from .pre_cooling import Precooling
 from .transition import Transition
-
-
-# Char = type("Char", (object, ), {})
-""" base class """
 
 
 class Cooler(object):

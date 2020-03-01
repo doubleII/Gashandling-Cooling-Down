@@ -1,14 +1,22 @@
 import PyTango
+
 from fsm.common.logging import MyLogger
 
 tango_base_path = 'tango://cci3he10.se.frm2.tum.de:10000/box/plc/_'
+tango_lakeshore_path = 'tango://cci3he10.se.frm2.tum.de:10000/box/lakeshore/'
 
 
 class Device(object):
     def __init__(self, name):
-        # test
-        self._dev = tango_base_path + name
-        # self._dev = PyTango.DeviceProxy(tango_base_path, name.lower())
+        # control elements lakeshore
+        filter = 'sens'
+        f = name.find(filter)
+        if name.find(filter) != -1:
+            self.dev = tango_lakeshore_path + name
+        else:
+            self._dev = tango_base_path + name
+
+        self._dev = PyTango.DeviceProxy(tango_base_path, name.lower())
         self._name = name
         self._status = self.read()
         self.log = MyLogger().get_logger()
@@ -22,10 +30,7 @@ class Device(object):
 
     def read(self):
         """ get (read) status from device """
-        # return self._dev.value
+        return self._dev.value
         # test
-        return '0'
-
-    def read_value(self): # todo noch nicht fertig
-        pass
+        # return '0'
 

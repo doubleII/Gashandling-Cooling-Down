@@ -24,6 +24,14 @@ Initialize:
         - 14
     compressor: compressor
     forpump: forpump
+    pStill: pStill
+    pInlet: pInlet
+    pUotlet: pUotlet
+    pVacc: pVacc
+    pV15: pV15
+    pKond: pKond
+    temp_sensor_a: sensa
+    temp_sensor_b: sensb
 Precooling:
     # Running time of state in seconds
     precooling_timer: 6
