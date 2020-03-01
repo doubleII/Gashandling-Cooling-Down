@@ -24,18 +24,19 @@ class FSM(object):
         # writer
         self.writer = Writer()
 
-        # todo fsm parameter
-        # temperature parameters
         # self.data = self.reader.read_config('Gashandling/fsm/configuration/config.yml')
         # todo only for test
         self.data = self.reader.read_config('fsm/configuration/config.yml')
-
+        self.k_factor = self.data['Main']['k']
+        # temperature parameters
         self.setpoint_temperature_in_tank = self.data['Precooling']['Einsatztemperatur']
+        self.start_temp = None
         self.temp_max = None
         self.setpoint_temp = None
         self.current_temp = None
         self.set_point_temp_stage_1 = self.data['CoolingDown']['set_point_temp_stage_1']
         # pressure parameters
+        self.start_pressure = None
         self.min_pressure_in_tank = self.data['Precooling']['MinPressureInTank']
         self.max_pressure = None
         self.setpoint_pressure = None

@@ -2,6 +2,12 @@ Main:
     # global running time in seconds. Running time of FMS
     global_running_time: 600
     global_time_interval: 1
+    # temperatur formel T(t) = Tu + (To -Tu).e^-k*t
+    # To - anfangstemperatur
+    # Tu - umgebungstemperatur
+    # t - zeit ( process time? )
+    # k - spezifische konstante des akbühlprozesses
+    k: 1
 Initialize:
     valves:
         - 1
@@ -28,12 +34,6 @@ Precooling:
     Einsatztemperatur: 4.0
     # minimal pressure in tank mbar (sollwert)
     MinPressureInTank: 220.0
-    # temperatur formel T(t) = Tu + (To -Tu).e^-k*t
-    # To - anfangstemperatur
-    # Tu - umgebungstemperatur
-    # t - zeit ( process time? )
-    # k - spezifische konstante des akbühlprozesses
-    k: 1
 FillWithHelium:
     # in sec
     time_interval: 5

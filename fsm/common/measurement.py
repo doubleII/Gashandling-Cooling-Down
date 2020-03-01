@@ -1,4 +1,4 @@
-from .state import State
+from .state import State, convert_value
 
 
 class MeasurementOfPrecooling(State):
@@ -13,32 +13,57 @@ class MeasurementOfPrecooling(State):
 
     def execute(self):
         self.log.info('Measure Precooling State execute')
+        result = "to_precool"
         if self.fsm.preview_state == self.fsm.states["Initialize"]:
             result = 'to_precool'
         elif self.fsm.preview_state == self.fsm.states["Precooling"]:
-            cols = len(self.fsm.precooling_table)
-            rows = 0
-            if cols:
-                rows = len(self.fsm.precooling_table[0])
-                for j in range(rows):
-                    for i in range(cols):
-                        if i == 0:
-                            temp = self.fsm.precooling_table[i][j]
-                        elif i == 1:
-                            pressure = self.fsm.precooling_table[i][j]
-                    self.log.info('current temperature: {0}, current pressure: {1}'.format(temp, pressure))
-                    # if pressure > 220 mbar and temperature < 4 K go to state FillWithHelium
-                    if float(pressure) > self.fsm.min_pressure_in_tank:
-                        if float(temp) < self.fsm.setpoint_temperature_in_tank:
-                            result = 'to_fill_helium'
-                        else:
-                            result = self.fsm.reader.read_precooling_csv(self.precoolingdown_csv,
-                                                        self.fsm.min_pressure_in_tank,
-                                                        self.fsm.setpoint_temperature_in_tank)
+            ###############################################
+            # read all items from table template
+            # check if no empty
+            # table = self.fsm.precooling_table
+            # if len(table):
+            #    for column in range(len(table)):
+            #        items = table[column]
+            #        for item in range(len(items)):
+            #            if item == 0:
+            #                temp = items[item]
+            #            elif item == 1:
+            #                pressure = items[item]
+            ################################################
+            if len(self.fsm.precooling_table):
+                table = self.fsm.precooling_table
+                # get first items temperature and pressure
+                first_items = table
+                self.fsm.start_temp = table[0][0]
+                self.fsm.start_pressure = table[0][1]
+                # get the last items temperature and pressure
+                last_items = table[len(table) - 1]
+                temp = last_items[0]
+                pressure = last_items[1]
+                self.log.info('current temperature: {0}, current pressure: {1}'.format(temp, pressure))
+                # if pressure > 220 mbar and temperature < 4 K go to state FillWithHelium
+                if float(pressure) > self.fsm.min_pressure_in_tank:
+                    if float(temp) < self.fsm.setpoint_temperature_in_tank:
+                        result = 'to_fill_helium'
+                        self.log.info('Pressure in tank is {0}, temperature in tank is {1}'.format(pressure, temp))
+                    else:
+                        for column in range(len(table)):
+                            items = table[column]
+                            for item in range(len(items)):
+                                if item == 0:
+                                    temp = items[item]
+                                    temp = convert_value(self.fsm.k_factor, self.fsm.start_temp, temp)
+                                    self.log.info('Temperature in tank is {0}'.format(temp))
+                                elif item == 1:
+                                    pressure = items[item]
+                                    pressure = convert_value(self.fsm.k_factor, self.fsm.start_pressure, pressure)
+                                    self.log.info('Pressure in tank is {0}'.format(pressure))
+                else:
+                    self.log.info('Pressure in tank is {0}, temperature in tank is {1}. Go to state {2}.'
+                                  .format(pressure, temp, result))
             else:
                 result = "to_error"
-                # self.log.error('Current pressure in tank: {0} mbar. The pressure in tank should be higher as {1} mbar'
-                #             .format(values[1], self.fsm.min_pressure_in_tank))
+                self.log.error('No temperature and pressure values!')
 
         self.fsm.to_transition(result)
 

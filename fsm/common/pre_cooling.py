@@ -1,21 +1,21 @@
-from datetime import datetime
 from time import process_time
 
 from .state import State
 
-import PyTango
+
 # dev = PyTango.DeviceProxy('tango://cci3he10.se.frm2.tum.de:10000/box/plc/' + ventilname)
 
 
 class Precooling(State):
-    """ wird eine bestimmte Zeit vorgekühlt"""
+    """ vorkühlen """
     def __init__(self, fsm):
         super(Precooling, self).__init__(fsm)
 
     def enter(self):
         self.log.info('===> Precooling enter')
         # enter state timer
-        super(Precooling, self).enter(self.fsm.data['Precooling']['precooling_timer'], self.fsm.data['Precooling']['time_interval'])
+        super(Precooling, self).enter(self.fsm.data['Precooling']['precooling_timer'],
+                                      self.fsm.data['Precooling']['time_interval'])
 
     def execute(self):
         self.log.info('Precooling execute method')
@@ -30,7 +30,7 @@ class Precooling(State):
             # todo read values from Tango
             column = []
             self.fsm.current_temp = 4 # todo read current temperature from sensor
-            self.fsm.current_pressure = 7 # todo read current pressure form sensor
+            self.fsm.current_pressure = 221 # todo read current pressure form sensor
             column.append(self.fsm.current_temp)
             column.append(self.fsm.current_pressure)
             # create pre cooling table |current temperature|current pressure| two columns
