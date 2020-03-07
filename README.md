@@ -1,11 +1,11 @@
-# Gashandling
+# Gashandling Abkühlen
 Ablaufsteuerung zum Abkühlen und Aufwärmen eines Verdampfungskryostaten mit Heliumrückgewinnung.
 
 #### Startparameter:
-<br/>Abkühlen
+<br/>Abkühlen muss geändert werden 
 <li>cooldown</li>
 <br/>
-Aufwärmen 
+Aufwärmen muss geändert werden 
 <li>warmup</li>
 
 # Settings
@@ -13,15 +13,20 @@ Sieh die Konfigurationsdatei "config.yaml"
 
 <br/>TODO:
 # FSM Abkühlen 
-Vorkühlen & Abkühlen 
+Vorkühlen & Abkühlen
 
+## Zustände
+
+### 1. Idle (beriet)
+### 2. Initialize 
+### 3. Vorkühlern (pre_cooling_down)
 <br/>Vorkühlen
 <br/>Voraussetzungen
 <br/>Der Druck muss größer 220 mbar anzeigen.  
-Die Temperature muss größer 4 K sein. Wenn die beiden Vorasusetzungen erfüllt sind,
+Die Temperature muss kleiner 4 Kelvin sein. Wenn die beiden Vorasusetzungen erfüllt sind,
 ändert die FSM den Zustand. Unter diese Bedingungen soll das benötigte Heilum in den Kreislauf
 eingefügt werden.
-
+### 4. Helium einfühlen (fill_with_helium)
 <br/>Helium einfüllen lassen
 <br/>Die Ventile 2,3,4,5,6,13,14 werden geöfnet und die Vorpumpe und die turbopumpe eingeschaltet.
 Dies  wird  solange  durchgeführt,  bis  genügend  Gas  im System steckt. Die Menge wird dabei an der Veränderung des Tankdrucks festgemacht. 200 mbar soll die 
@@ -31,9 +36,8 @@ durch  einen  zu  hohen  Druck  vorgebeugt  werden.  Um  dies  zu  realisieren  
 geschlossen. Da somit kein Gas nachströmt, der Kompressor aber weiterpumpt, sinkt der Druck 
 wieder. Sobald pOut wieder unter 300 mbar abfällt, kann mit dem Füllen durch Öffnen des 
 Ventils 13 fortgefahren werden.
-<br/>...
-<br/>Abkühlen
-<br/>...
-# FSM Temperature konstant halten 
+### 5. Kühlen (cooling)
+### 6. kühlen unter 1 Kelin 
+### 7. Idle
 
-# FSM Aufwärmen
+
