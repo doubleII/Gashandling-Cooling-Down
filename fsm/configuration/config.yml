@@ -2,22 +2,46 @@ Main:
     # global running time in seconds. Running time of FMS
     global_running_time: 600
     global_time_interval: 1
-Precooling:
-    # Running time of state in seconds
-    precooling_timer: 60
-    # values (Pressure & Temperature) recording interval in sec.
-    # If time_interval=1 means, every seconds is taken feedback from sensor and written into *.csv file
-    time_interval: 10
-    # in Kelvin (sollwert)
-    Einsatztemperatur: 4.0
-    # minimal pressure in tank mbar (sollwert)
-    MinPressureInTank: 220.0
     # temperatur formel T(t) = Tu + (To -Tu).e^-k*t
     # To - anfangstemperatur
     # Tu - umgebungstemperatur
     # t - zeit ( process time? )
     # k - spezifische konstante des akbühlprozesses
     k: 1
+Initialize:
+    valves:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        - 10
+        - 11
+        - 12
+        - 13
+        - 14
+    compressor: compressor
+    forpump: forpump
+    pStill: pStill
+    pInlet: pInlet
+    pUotlet: pUotlet
+    pVacc: pVacc
+    pV15: pV15
+    pKond: pKond
+    temp_sensor_a: sensa
+    temp_sensor_b: sensb
+Precooling:
+    # Running time of state in seconds
+    precooling_timer: 6
+    # values (Pressure & Temperature) recording interval in sec.
+    # If time_interval=1 means, every seconds is taken feedback from sensor and written into *.csv file
+    time_interval: 1
+    # in Kelvin (sollwert)
+    Einsatztemperatur: 4.0
+    # minimal pressure in tank mbar (sollwert)
+    MinPressureInTank: 220.0
 FillWithHelium:
     # in sec
     time_interval: 5

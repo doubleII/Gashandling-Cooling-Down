@@ -1,7 +1,6 @@
 from datetime import datetime
 from time import process_time
 
-from .fsm import Reader, Writer
 from .state import State
 from fsm.data.models import Device
 
@@ -42,13 +41,13 @@ class FillWithHelium(State):
         while self.state_timer > process_time():
             start_timer = process_time()
             self.log.info('>>> Get feedback')
-            test_data = Reader.read_config(self.pseudo_parameter_yml)
+            test_data = self.fsm.reader.read_config(self.pseudo_parameter_yml)
             while start_timer + self.time_interval > process_time():
                 pass
             time = datetime.now().strftime('%Y%d%m %H:%M:%S')
             test_current_pressure = test_data['test_current_pressure']
             self.pOut = test_data['test_pressure_on_pOut']
-            Writer.write_fill_with_helium_csv_file(self.fillwithhelium_csv,
+            self.fsm.writer.write_fill_with_helium_csv_file(self.fillwithhelium_csv,
                                                    time,
                                                    self.fsm.current_pressure,
                                                    test_current_pressure,

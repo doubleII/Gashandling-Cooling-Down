@@ -1,7 +1,7 @@
 from .cooling_down import CoolingDown
 from .error import Error
-from .fsm import FSM
 from .fill_with_helium import FillWithHelium
+from .fsm import FSM
 from .initialize import Initialize
 from .logging import MyLogger
 from .measurement import MeasurementOfPrecooling, \
@@ -10,13 +10,9 @@ from .pre_cooling import Precooling
 from .transition import Transition
 
 
-Char = type("Char", (object, ), {})
-""" base class """
-
-
-class Cooler(Char):
+class Cooler(object):
     """ define all states and transitions """
-    def __init__(self):
+    def __init__(self, state):
         self.log = MyLogger().get_logger()
         self.fsm = FSM(self)
         # States
@@ -44,7 +40,9 @@ class Cooler(Char):
                                 Transition("CooldownMeasurement"))
         self.fsm.add_transition("to_error", Transition("Error"))
         # start state
-        self.fsm.set_state("Initialize")
+        # self.fsm.set_state(state)
+        # todo test start state
+        self.fsm.set_state(state)
 
     def execute(self):
         try:

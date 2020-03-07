@@ -13,21 +13,31 @@ class FSM(object):
     """ FSM parameter """
 
     def __init__(self, character):
-        # self.char = character
         self.states = {}
         self.transitions = {}
         self.cur_state = None
         self.preview_state = None
         self.trans = None
-        # todo fsm parameter
+        self.log = MyLogger().get_logger()
+        # reader
+        self.reader = Reader()
+        # writer
+        self.writer = Writer()
+
+        self.data = self.reader.read_config('Gashandling/fsm/configuration/config.yml')
+        # only for test
+        # self.data = self.reader.read_config('fsm/configuration/config.yml')
+
+        self.k_factor = self.data['Main']['k']
         # temperature parameters
-        self.data = Reader.read_config('Gashandling/fsm/configuration/config.yml')
         self.setpoint_temperature_in_tank = self.data['Precooling']['Einsatztemperatur']
+        self.start_temp = None
         self.temp_max = None
         self.setpoint_temp = None
         self.current_temp = None
         self.set_point_temp_stage_1 = self.data['CoolingDown']['set_point_temp_stage_1']
         # pressure parameters
+        self.start_pressure = None
         self.min_pressure_in_tank = self.data['Precooling']['MinPressureInTank']
         self.max_pressure = None
         self.setpoint_pressure = None
@@ -42,9 +52,19 @@ class FSM(object):
         self.set_point_pressure_stage_1 = self.data['CoolingDown']['set_point_pressure_stage_1']
         # devices
         self.valves = {}
-        self.booster_pump = False
-        self.compressor = False
-        self.log = MyLogger().get_logger()
+        self.booster_pump = None
+        self.compressor = None
+        self.p_still = None
+        self.p_in_let = None
+        self.p_out_let = None
+        self.p_kond = None
+        self.p_tank = None
+        self.p_vacc = None
+        self.p_v_15 = None
+        self.temp_sensor_a = None
+        self.temp_sensor_b = None
+        # tables
+        self.precooling_table = []
 
     def add_transition(self, trans_name, transition):
         self.transitions[trans_name] = transition
@@ -80,8 +100,7 @@ class FSM(object):
 
 class Reader:
 
-    @staticmethod
-    def read_initial_temp(path):
+    def read_initial_temp(self, path):
         """ read start temperature. State Precooling """
         try:
             with open(path, mode='r') as file:
@@ -96,8 +115,7 @@ class Reader:
         except Exception as ex:
             LOGGER.error('Exception: {0}. Method: read_initial_temp'.format(ex))
 
-    @staticmethod
-    def read_config(path):
+    def read_config(self, path):
         """ read the config files """
         try:
             with open(path, mode='r') as config_file:
@@ -107,8 +125,7 @@ class Reader:
         except Exception as ex:
             LOGGER.error(ex)
 
-    @staticmethod
-    def read_precooling_csv(path, set_point_pressure_in_tank, set_point_temperature):
+    def read_precooling_csv(self, path, set_point_pressure_in_tank, set_point_temperature):
         """ read state precooling csv file """
         try:
             # open the csv file
@@ -153,8 +170,7 @@ class Reader:
             result = 'to_error'
         return result
 
-    @staticmethod
-    def get_current_pressure_and_temperature(path):
+    def get_current_pressure_and_temperature(self, path):
         """ get current pressure and temperature in tank for precooling state"""
         try:
             with open(path, mode='r') as f:
@@ -172,8 +188,7 @@ class Reader:
         finally:
             f.close()
 
-    @staticmethod
-    def get_pressure_difference(path):
+    def get_pressure_difference(self, path):
         """ fill with helium state read the pressure difference in tank and check pOut"""
         try:
             with open(path, mode='r') as f:
@@ -188,8 +203,7 @@ class Reader:
         finally:
             f.close()
 
-    @staticmethod
-    def get_cooldown_values(path):
+    def get_cooldown_values(self, path):
         """" cool down state read the pressure and temperature """
         try:
             with open(path, mode='r') as f:
@@ -207,8 +221,7 @@ class Reader:
 
 class Writer:
 
-    @staticmethod
-    def write_csv(path, date_time, cur_pressure, cur_temp, set_point_temp, initial_temp):
+    def write_csv( self, path, date_time, cur_pressure, cur_temp, set_point_temp, initial_temp):
         """ write the current pressure and temperature in tank. State Precooling """
         try:
             data = Reader.read_config('Gashandling/fsm/configuration/config.yml')
@@ -235,8 +248,7 @@ class Writer:
         except Exception as ex:
             LOGGER.error('Exception: {0}. Method: write_csv'.format(ex))
 
-    @staticmethod
-    def reset_csv_file():
+    def reset_csv_file(self):
         header_precooling = [
             'date',
             'current pressure [mbar]',
@@ -286,8 +298,7 @@ class Writer:
         except Exception as ex:
             LOGGER.info('Exception: {0}. Method: reset_csv_file'.format(ex))
 
-    @staticmethod
-    def write_fill_with_helium_csv_file(path, time, tank_pressure, current_pressure, pOut):
+    def write_fill_with_helium_csv_file(self, path, time, tank_pressure, current_pressure, pOut):
         """ write pressure difference and pOut values in fill with helium cav file"""
         try:
             with open(path, mode='a', newline='') as csv_file:
@@ -307,8 +318,7 @@ class Writer:
         finally:
             csv_file.close()
 
-    @staticmethod
-    def write_cooling_down_csv_file(path, time, pPreVac, max_pPreVac, pVac,
+    def write_cooling_down_csv_file(self, path, time, pPreVac, max_pPreVac, pVac,
                                     max_pVac, curr_temp_isolation_chamber,
                                     temp_isolation_chamber_set_point, pressure_isolation_chamber_set_point):
         """ write the pPreVac, max pPreVac, pVac, max pVac,
