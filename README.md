@@ -8,11 +8,11 @@ Ablaufsteuerung zum Abkühlen und Aufwärmen eines Verdampfungskryostaten mit He
 Aufwärmen muss geändert werden 
 <li>warmup</li>
 
-# Settings
+## Settings
 Sieh die Konfigurationsdatei "config.yaml"
 
 <br/>TODO:
-# FSM Abkühlen 
+## FSM Abkühlen 
 Vorkühlen & Abkühlen
 
 ## Zustände
@@ -20,9 +20,8 @@ Vorkühlen & Abkühlen
 ### 1. Idle (beriet)
 ### 2. Initialize 
 ### 3. Vorkühlern (pre_cooling_down)
-<br/>Vorkühlen
-<br/>Voraussetzungen
-<br/>Der Druck muss größer 220 mbar anzeigen.  
+<br/>Voraussetzung:
+<br/>Der Druck muss größer 220 mbar anzeigen. Das heißt, dass im Tank muss mindestens 220 miliiter Gas  
 Die Temperature muss kleiner 4 Kelvin sein. Wenn die beiden Vorasusetzungen erfüllt sind,
 ändert die FSM den Zustand. Unter diese Bedingungen soll das benötigte Heilum in den Kreislauf
 eingefügt werden.
@@ -37,7 +36,10 @@ geschlossen. Da somit kein Gas nachströmt, der Kompressor aber weiterpumpt, sin
 wieder. Sobald pOut wieder unter 300 mbar abfällt, kann mit dem Füllen durch Öffnen des 
 Ventils 13 fortgefahren werden.
 ### 5. Kühlen (cooling)
-### 6. kühlen unter 1 Kelin 
+### 6. Kühlen unter 1 Kelin 
 ### 7. Idle
+
+
+<br/>[Dropbox link]: https://www.dropbox.com/sh/on9qoytrhnbr8m5/AAAsT7IvGPmPMGjfxRkduPOza?dl=0
 
 
