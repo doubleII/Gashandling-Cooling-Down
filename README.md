@@ -20,11 +20,7 @@ Vorkühlen & Abkühlen
 ### 1. Idle (beriet)
 ### 2. Initialize 
 ### 3. Vorkühlern (pre_cooling_down)
-<br/>Voraussetzung:
-<br/>Der Druck muss größer 220 mbar anzeigen. Das heißt, dass im Tank muss mindestens 220 miliiter Gas  
-Die Temperature muss kleiner 4 Kelvin sein. Wenn die beiden Vorasusetzungen erfüllt sind,
-ändert die FSM den Zustand. Unter diese Bedingungen soll das benötigte Heilum in den Kreislauf
-eingefügt werden.
+<br/>Der Druck im Tank muss größer 220 mbar sein. Die Temperature muss kleiner 4 Kelvin sein. Wenn die beiden Vorasusetzungen erfüllt sind, ändert die FSM den Zustand. Unter diese Bedingungen soll das benötigte Heilum in den Kreislauf eingefügt werden.
 ### 4. Helium einfühlen (fill_with_helium)
 <br/>Helium einfüllen lassen
 <br/>Die Ventile 2,3,4,5,6,13,14 werden geöfnet und die Vorpumpe und die turbopumpe eingeschaltet.
