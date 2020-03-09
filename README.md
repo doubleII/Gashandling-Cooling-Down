@@ -1,5 +1,5 @@
 # Gashandling Abkühlen
-Ablaufsteuerung zum Abkühlen und Aufwärmen eines Verdampfungskryostaten mit Heliumrückgewinnung.
+Ablaufsteuerung zum Abkühlen Verdampfungskryostaten.
 
 #### Startparameter:
 <br/>Abkühlen muss geändert werden 
